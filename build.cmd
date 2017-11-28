@@ -10,4 +10,4 @@ if not "%PackageVersion%" == "" (
 )
 
 %nuget% restore
-%MsBuildExe% /t:pack /p:Configuration=Release
+"%MsBuildExe%" /t:pack /p:Configuration=Release
