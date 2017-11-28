@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net452</TargetFrameworks>
+    <Authors>Olivier Bossaer</Authors>
+    <Company>ACME</Company>
+    <PackageId>Acme.Web.Security.Headers</PackageId>
+    <Description />
+    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Acme.Web.Security.Headers.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ContentFiles\Schemas\Acme.Web.Security.Headers.xsd" />
+    <None Remove="ContentFiles\web.config.install.xdt" />
+    <None Remove="ContentFiles\web.config.uninstall.xdt" />
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ContentFiles\App_Start\AcmeConfig.cs.pp">
+      <Pack>true</Pack>
+      <PackagePath>content\App_Start\</PackagePath>
+    </Content>
+    <Content Include="ContentFiles\Schemas\Acme.Web.Security.Headers.xsd">
+      <Pack>true</Pack>
+      <PackagePath>content\Schemas\</PackagePath>
+    </Content>
+    <Content Include="ContentFiles\web.config.uninstall.xdt">
+      <PackagePath>content\</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+    <Content Include="ContentFiles\web.config.install.xdt">
+      <Pack>true</Pack>
+      <PackagePath>content\</PackagePath>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.3" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.3" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.3" />
+    <PackageReference Include="Microsoft.Net.Compilers" Version="2.4.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+
+</Project>

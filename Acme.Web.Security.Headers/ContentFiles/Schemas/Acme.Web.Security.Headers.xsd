@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Acme"
+    targetNamespace="Acme.Web.Security.Headers"
+    elementFormDefault="qualified"
+    xmlns="Acme.Web.Security.Headers"
+    xmlns:mstns="Acme.Web.Security.Headers"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <xs:element name="acme.web.security.headers" type="acme.web.security.headers" />
+
+  <xs:complexType name="acme.web.security.headers">
+    <xs:all minOccurs="0">
+      <xs:element name="contentSecurityPolicy" type="contentSecurityPolicy" />
+    </xs:all>
+    <xs:attribute name="contentTypeOptions" type="boolean" default="true" use="optional" />
+    <xs:attribute name="frameOptions" type="frameOptions" default="Deny" use="optional" />
+    <xs:attribute name="xssProtection" type="xssProtection" default="Block" use="optional" />
+    <xs:anyAttribute namespace="##other" />
+  </xs:complexType>
+
+  <xs:simpleType name="boolean">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="true" />
+      <xs:enumeration value="false" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="xssProtection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Disabled">
+        <xs:annotation>
+          <xs:documentation>Disables XSS filtering.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Enabled">
+        <xs:annotation>
+          <xs:documentation>Enables XSS filtering (usually default in browsers). If a cross-site scripting attack is detected, the browser will sanitize the page (remove the unsafe parts).</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Block">
+        <xs:annotation>
+          <xs:documentation>Enables XSS filtering. Rather than sanitizing the page, the browser will prevent rendering of the page if an attack is detected.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="frameOptions">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Deny">
+        <xs:annotation>
+          <xs:documentation>
+            The page cannot be displayed in a frame, regardless of the site attempting to do so.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Disabled">
+        <xs:annotation>
+          <xs:documentation>
+            The X-Frame-Options Header is not emitted.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SameOrigin">
+        <xs:annotation>
+          <xs:documentation>
+            The page can only be displayed in a frame on the same origin as the page itself.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="contentSecurityPolicy">
+    <xs:all>
+      <xs:element minOccurs="0" name="child" type="contentSecurityPolicyConfiguration" />
+      <xs:element minOccurs="0" name="connect" type="contentSecurityPolicyConfiguration" />
+      <xs:element minOccurs="0" name="default" type="contentSecurityPolicyConfiguration" />
+      <xs:element minOccurs="0" name="font" type="contentSecurityPolicyConfiguration" />
+      <xs:element minOccurs="0" name="form" type="contentSecurityPolicyConfiguration" />
+      <xs:element minOccurs="0" name="img" type="contentSecurityPolicyConfiguration" />
+      <xs:element minOccurs="0" name="media" type="contentSecurityPolicyConfiguration" />
+      <xs:element minOccurs="0" name="object" type="contentSecurityPolicyConfiguration" />
+      <xs:element minOccurs="0" name="script" type="contentSecurityPolicyConfiguration" />
+      <xs:element minOccurs="0" name="style" type="contentSecurityPolicyConfiguration" />
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="contentSecurityPolicyConfiguration">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element name="add">
+        <xs:complexType>
+          <xs:attribute name="host" type="xs:anyURI" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="remove">
+        <xs:complexType>
+          <xs:attribute name="host" type="xs:anyURI" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="clear">
+        <xs:complexType></xs:complexType>
+      </xs:element>
+    </xs:choice>
+    <xs:attribute name="all" type="boolean" use="optional" default="false" />
+    <xs:attribute name="http" type="boolean" use="optional" default="false" />
+    <xs:attribute name="https" type="boolean" use="optional" default="false" />
+    <xs:attribute name="data" type="boolean" use="optional" default="false" />
+    <xs:attribute name="self" type="boolean" use="optional" default="false" />
+    <xs:attribute name="ws" type="boolean" use="optional" default="false" />
+    <xs:attribute name="unsafeInline" type="boolean" use="optional" default="false" />
+    <xs:attribute name="unsafeEval" type="boolean" use="optional" default="false" />
+    <xs:attribute name="none" type="boolean" use="optional" default="false" />
+  </xs:complexType>
+</xs:schema>

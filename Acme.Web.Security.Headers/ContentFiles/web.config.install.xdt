@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <configSections xdt:Transform="InsertBefore(/configuration/*[1])" />
+  <configSections xdt:Locator="XPath(/configuration/configSections[last()])">
+    <section name="acme.web.security.headers" type="Acme.Web.Security.Headers.Configuration.SecuritySection, Acme.Web.Security.Headers" xdt:Locator="Match(name)" xdt:Transform="InsertIfMissing"/>
+  </configSections>
+  <configSections xdt:Transform="RemoveAll" xdt:Locator="Condition(count(*)=0)" />
+  <acme.web.security.headers xdt:Transform="InsertIfMissing" xmlns="Acme.Web.Security.Headers">
+    <contentSecurityPolicy>
+      <default self="true"/>
+    </contentSecurityPolicy>
+  </acme.web.security.headers>
+  <system.web xdt:Transform="InsertIfMissing"/>
+  <system.web>
+    <httpCookies xdt:Transform="InsertIfMissing"/>
+    <httpCookies requireSSL="true" httpOnlyCookies="true" xdt:Transform="SetAttributes()"/>
+    <httpRuntime xdt:Transform="InsertIfMissing"/>
+    <httpRuntime enableVersionHeader="false" enableHeaderChecking="true" xdt:Transform="SetAttributes()" />
+  </system.web>
+  <system.webServer xdt:Transform="InsertIfMissing"/>
+  <system.webServer>
+    <modules xdt:Transform="InsertIfMissing"/>
+    <modules>
+      <add name="RemoveInfoHeaders" type="Acme.Web.Security.Headers.RemoveInfoHeaders, Acme.Web.Security.Headers" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
+    </modules>
+    <httpProtocol xdt:Transform="InsertIfMissing"/>
+    <httpProtocol>
+      <customHeaders xdt:Transform="InsertIfMissing"/>
+      <customHeaders>
+        <remove name="Server" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
+        <remove name="X-Powered-By" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
+        <remove name="X-AspNet-Version" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
+        <remove name="X-AspNetMvc-Version" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
+      </customHeaders>
+    </httpProtocol>
+    <rewrite xdt:Transform="InsertIfMissing"/>
+    <rewrite>
+      <outboundRules xdt:Transform="InsertIfMissing"/>
+      <outboundRules>
+        <rule name="Add SameSite" preCondition="No SameSite" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+          <match serverVariable="RESPONSE_Set_Cookie" pattern=".*" negate="false" />
+          <action type="Rewrite" value="{R:0}; SameSite=lax" />
+          <conditions>
+          </conditions>
+        </rule>
+        <preConditions xdt:Transform="InsertIfMissing"/>
+        <preConditions>
+          <preCondition name="No SameSite" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+            <add input="{RESPONSE_Set_Cookie}" pattern="." />
+            <add input="{RESPONSE_Set_Cookie}" pattern="; SameSite=lax" negate="true" />
+          </preCondition>
+        </preConditions>
+      </outboundRules>
+    </rewrite>
+  </system.webServer>
+</configuration>

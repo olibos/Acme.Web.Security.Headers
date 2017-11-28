@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <configSections>
+    <section name="acme.web.security.headers" xdt:Locator="Match(name)" xdt:Transform="Remove"/>
+  </configSections>
+  <acme.web.security.headers xdt:Transform="Remove" />
+  <system.webServer>
+    <modules>
+      <add name="RemoveInfoHeaders" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+    </modules>
+  </system.webServer>
+</configuration>
