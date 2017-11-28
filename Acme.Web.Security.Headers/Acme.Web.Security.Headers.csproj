@@ -9,6 +9,7 @@
     <FileVersion>1.0.0.0</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Acme.Web.Security.Headers.xml</DocumentationFile>
+    <IncludeSymbols>True</IncludeSymbols>
   </PropertyGroup>
 
   <ItemGroup>

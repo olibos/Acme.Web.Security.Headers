@@ -10,5 +10,4 @@ if not "%PackageVersion%" == "" (
 )
 
 %nuget% restore
-"%MsBuildExe%" /t:pack /p:Configuration=Release
-%nuget% pack Acme.Web.Security.Headers\Acme.Web.Security.Headers.csproj -symbols
+%MsBuildExe% /t:pack /p:Configuration=Release
