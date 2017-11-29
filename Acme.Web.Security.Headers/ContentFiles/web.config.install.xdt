@@ -19,6 +19,11 @@
   </system.web>
   <system.webServer xdt:Transform="InsertIfMissing"/>
   <system.webServer>
+    <handlers xdt:Transform="InsertIfMissing" />
+    <handlers>
+      <remove name="TraceHandler-Integrated" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
+      <remove name="TraceHandler-Integrated-4.0" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
+    </handlers>
     <modules xdt:Transform="InsertIfMissing"/>
     <modules>
       <add name="RemoveInfoHeaders" type="Acme.Web.Security.Headers.RemoveInfoHeaders, Acme.Web.Security.Headers" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
