@@ -5,11 +5,16 @@
     <Authors>Olivier Bossaer</Authors>
     <Company>ACME</Company>
     <PackageId>Acme.Web.Security.Headers</PackageId>
-    <Description />
+    <Description>Secure your web site/application with a simple package.</Description>
     <FileVersion>1.0.0.0</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Acme.Web.Security.Headers.xml</DocumentationFile>
     <IncludeSymbols>True</IncludeSymbols>
+    <PackageProjectUrl>https://github.com/olibos/Acme.Web.Security.Headers</PackageProjectUrl>
+    <PackageTags>web security</PackageTags>
+    <RepositoryUrl>https://github.com/olibos/Acme.Web.Security.Headers</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/olibos/Acme.Web.Security.Headers/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>© ACME</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
