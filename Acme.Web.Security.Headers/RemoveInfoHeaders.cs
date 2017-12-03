@@ -15,20 +15,34 @@ namespace Acme.Web.Security.Headers
     public class RemoveInfoHeaders : IHttpModule
     {
         /// <summary>
+        /// To detect redundant calls
+        /// </summary>
+        private bool disposedValue = false;
+
+        /// <summary>
         /// Disposes of the resources (other than memory) used by the module that implements <see cref="T:System.Web.IHttpModule" />.
         /// </summary>
         public void Dispose()
         {
-            // Nothing to dispose.
+            this.Dispose(true);
         }
 
         /// <summary>
         /// Initializes a module and prepares it to handle requests.
         /// </summary>
         /// <param name="context">An <see cref="T:System.Web.HttpApplication" /> that provides access to the methods, properties, and events common to all application objects within an ASP.NET application</param>
-        public void Init(HttpApplication context)
+        public virtual void Init(HttpApplication context)
         {
             context.PreSendRequestHeaders += PreSendRequestHeaders;
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            // Nothing to dispose.
         }
 
         /// <summary>

@@ -5,6 +5,8 @@
 
 namespace Acme.Web.Security.Headers.Extensions
 {
+    using System;
+    using System.Linq;
     using System.Web.Mvc;
 
     /// <summary>
@@ -18,7 +20,15 @@ namespace Acme.Web.Security.Headers.Extensions
         /// <param name="filters">The filters.</param>
         public static void RegisterAcmeWebSecurity(this GlobalFilterCollection filters)
         {
-            filters.Add(new WebSecurityAttribute(), int.MinValue);
+            if (filters == null)
+            {
+                throw new ArgumentNullException(nameof(filters));
+            }
+
+            if (!filters.OfType<WebSecurityAttribute>().Any())
+            {
+                filters.Add(new WebSecurityAttribute(), int.MinValue);
+            }
         }
     }
 }

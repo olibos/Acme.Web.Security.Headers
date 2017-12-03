@@ -5,6 +5,7 @@
 
 namespace Acme.Web.Security.Headers.Extensions
 {
+    using System;
     using System.Linq;
     using System.Web.Http;
     using Api;
@@ -14,6 +15,11 @@ namespace Acme.Web.Security.Headers.Extensions
     /// </summary>
     public static class HttpConfigurationExtensions
     {
+        /// <summary>
+        /// The route name.
+        /// </summary>
+        private const string RouteName = "Acme.Web.Security.Headers.Csp";
+
         /// <summary>
         /// Gets a value indicating whether CSP web hook is enabled.
         /// </summary>
@@ -28,16 +34,24 @@ namespace Acme.Web.Security.Headers.Extensions
         /// <param name="configuration">The configuration.</param>
         public static void RegisterCspWebHook(this HttpConfiguration configuration)
         {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
             if (!configuration.Formatters.Any(f => f.SupportedMediaTypes.Any(m => m.MediaType == CspReportMediaTypeFormatter.MediaType)))
             {
                 configuration.Formatters.Add(new CspReportMediaTypeFormatter());
             }
 
-            IsCspWebHookEnabled = true;
-            configuration.Routes.MapHttpRoute(
-                name: "Acme.Web.Security.Headers.Csp",
-                routeTemplate: WebSecurityAttribute.CspWebHookRoute.TrimStart('/'),
-                defaults: new { controller = "CspViolation" });
+            if (!configuration.Routes.ContainsKey(RouteName))
+            {
+                IsCspWebHookEnabled = true;
+                configuration.Routes.MapHttpRoute(
+                    name: RouteName,
+                    routeTemplate: WebSecurityAttribute.CspWebHookRoute.TrimStart('/'),
+                    defaults: new { controller = "CspViolation" });
+            }
         }
     }
 }

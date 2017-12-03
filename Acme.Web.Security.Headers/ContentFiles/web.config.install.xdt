@@ -26,7 +26,7 @@
     </handlers>
     <modules xdt:Transform="InsertIfMissing"/>
     <modules>
-      <add name="RemoveInfoHeaders" type="Acme.Web.Security.Headers.RemoveInfoHeaders, Acme.Web.Security.Headers" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
+      <add name="SetupAcmeWebSecurity" type="Acme.Web.Security.Headers.SetupMvcModule, Acme.Web.Security.Headers" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
     </modules>
     <httpProtocol xdt:Transform="InsertIfMissing"/>
     <httpProtocol>
@@ -52,6 +52,7 @@
         <preConditions>
           <preCondition name="No SameSite" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
             <add input="{RESPONSE_Set_Cookie}" pattern="." />
+            <add input="{RESPONSE_Set_Cookie}" pattern="OpenIdConnect\.nonce\..+" negate="true" />
             <add input="{RESPONSE_Set_Cookie}" pattern="; SameSite=lax" negate="true" />
           </preCondition>
         </preConditions>
