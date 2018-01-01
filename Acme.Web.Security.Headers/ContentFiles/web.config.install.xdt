@@ -5,10 +5,11 @@
     <section name="acme.web.security.headers" type="Acme.Web.Security.Headers.Configuration.SecuritySection, Acme.Web.Security.Headers" xdt:Locator="Match(name)" xdt:Transform="InsertIfMissing"/>
   </configSections>
   <configSections xdt:Transform="RemoveAll" xdt:Locator="Condition(count(*)=0)" />
-  <acme.web.security.headers xdt:Transform="InsertIfMissing" xmlns="Acme.Web.Security.Headers">
+  <acme.web.security.headers xdt:Transform="InsertIfMissing" xmlns="Acme.Web.Security.Headers" referrerPolicy="StrictOriginWhenCrossOrigin" frameOptions="Deny">
     <contentSecurityPolicy>
       <default self="true"/>
     </contentSecurityPolicy>
+    <strictTransportSecurity maxAge="31536000" includeSubDomains="true" preload="true"/>
   </acme.web.security.headers>
   <system.web xdt:Transform="InsertIfMissing"/>
   <system.web>

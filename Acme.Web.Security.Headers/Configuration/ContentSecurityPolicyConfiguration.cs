@@ -8,6 +8,7 @@ namespace Acme.Web.Security.Headers.Configuration
     using System.Configuration;
     using System.Diagnostics;
     using System.Text;
+    using Acme.Web.Security.Headers.ComponentModel;
     using Extensions;
 
     /// <summary>
@@ -67,20 +68,30 @@ namespace Acme.Web.Security.Headers.Configuration
         public CspDirectiveConfiguration Form => (CspDirectiveConfiguration)this["form"];
 
         /// <summary>
+        /// Gets the frame-src, it specifies valid sources for nested browsing contexts loading using elements such as &lt;frame&gt; and &lt;iframe&gt;..
+        /// </summary>
+        /// <value>
+        /// The frame.
+        /// </value>
+        [ConfigurationProperty("frame", IsRequired = false)]
+        public CspDirectiveConfiguration Frame => (CspDirectiveConfiguration)this["frame"];
+
+        /// <summary>
+        /// Gets the frame ancestors, it specifies valid parents that may embed a page using &lt;frame&gt;, &lt;iframe&gt;, &lt;object&gt;, &lt;embed&gt;, or &lt;applet&gt;.
+        /// </summary>
+        /// <value>
+        /// The frame ancestors.
+        /// </value>
+        [ConfigurationProperty("frameAncestors", IsRequired = false)]
+        public CspDirectiveConfiguration FrameAncestors => (CspDirectiveConfiguration)this["frameAncestors"];
+
+        /// <summary>
         /// Gets the header value.
         /// </summary>
         /// <value>
         /// The header value.
         /// </value>
-        public string HeaderValue
-        {
-            get
-            {
-                var buffer = new StringBuilder();
-                this.GetHeaderValue(null);
-                return buffer.ToString();
-            }
-        }
+        public string HeaderValue => this.GetHeaderValue(null);
 
         /// <summary>
         /// Gets the img.
@@ -91,6 +102,15 @@ namespace Acme.Web.Security.Headers.Configuration
         /// </value>
         [ConfigurationProperty("img", IsRequired = false)]
         public CspDirectiveConfiguration Img => (CspDirectiveConfiguration)this["img"];
+
+        /// <summary>
+        /// Gets the manifest, it specifies valid sources of application manifest files.
+        /// </summary>
+        /// <value>
+        /// The manifest.
+        /// </value>
+        [ConfigurationProperty("manifest", IsRequired = false)]
+        public CspDirectiveConfiguration Manifest => (CspDirectiveConfiguration)this["manifest"];
 
         /// <summary>
         /// Gets the media.
@@ -113,6 +133,15 @@ namespace Acme.Web.Security.Headers.Configuration
         public CspDirectiveConfiguration Object => (CspDirectiveConfiguration)this["object"];
 
         /// <summary>
+        /// Gets the require subresource integrity.
+        /// </summary>
+        /// <value>
+        /// The require subresource integrity.
+        /// </value>
+        [ConfigurationProperty("requireSubresourceIntegrity", IsRequired = false, DefaultValue = RequireSubresourceIntegrity.None)]
+        public RequireSubresourceIntegrity RequireSubresourceIntegrity => (RequireSubresourceIntegrity)this["requireSubresourceIntegrity"];
+
+        /// <summary>
         /// Gets the script.
         /// Defines valid sources of JavaScript.
         /// </summary>
@@ -133,6 +162,15 @@ namespace Acme.Web.Security.Headers.Configuration
         public CspDirectiveConfiguration Style => (CspDirectiveConfiguration)this["style"];
 
         /// <summary>
+        /// Gets the worker, it specifies valid sources for Worker, SharedWorker, or ServiceWorker scripts.
+        /// </summary>
+        /// <value>
+        /// The worker.
+        /// </value>
+        [ConfigurationProperty("worker", IsRequired = false)]
+        public CspDirectiveConfiguration Worker => (CspDirectiveConfiguration)this["worker"];
+
+        /// <summary>
         /// Gets the header value.
         /// </summary>
         /// <param name="reportUri">The report URI.</param>
@@ -141,18 +179,23 @@ namespace Acme.Web.Security.Headers.Configuration
         {
             var buffer = new StringBuilder();
             TryAddSection(buffer, "default-src", this.Default);
-            TryAddSection(buffer, "script-src", this.Script);
-            TryAddSection(buffer, "style-src", this.Style);
-            TryAddSection(buffer, "img-src", this.Img);
+            TryAddSection(buffer, "child-src", this.Child);
             TryAddSection(buffer, "connect-src", this.Connect);
             TryAddSection(buffer, "font-src", this.Font);
-            TryAddSection(buffer, "object-src", this.Object);
-            TryAddSection(buffer, "media-src", this.Media);
-            TryAddSection(buffer, "child-src", this.Child);
             TryAddSection(buffer, "form-src", this.Form);
-            if (buffer.Length > 0 && !string.IsNullOrWhiteSpace(reportUri))
+            TryAddSection(buffer, "frame-src", this.Frame);
+            TryAddSection(buffer, "frame-ancestors", this.FrameAncestors);
+            TryAddSection(buffer, "img-src", this.Img);
+            TryAddSection(buffer, "manifest-src", this.Manifest);
+            TryAddSection(buffer, "media-src", this.Media);
+            TryAddSection(buffer, "object-src", this.Object);
+            TryAddSection(buffer, "require-sri-for", HeaderValueAttribute.GetHeaderValue(this.RequireSubresourceIntegrity));
+            TryAddSection(buffer, "script-src", this.Script);
+            TryAddSection(buffer, "style-src", this.Style);
+            TryAddSection(buffer, "worker-src", this.Worker);
+            if (buffer.Length > 0)
             {
-                buffer.Append($"report-uri {reportUri};");
+                TryAddSection(buffer, "report-uri", reportUri);
             }
 
             return buffer.ToString();
@@ -177,6 +220,23 @@ namespace Acme.Web.Security.Headers.Configuration
             {
                 // There is no settings for this section -> cleanup!
                 buffer.Length -= sectionName.Length;
+            }
+        }
+
+        /// <summary>
+        /// Tries to add the specified section.
+        /// </summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="sectionName">Name of the section.</param>
+        /// <param name="sectionConfiguration">The section configuration.</param>
+        private static void TryAddSection(StringBuilder buffer, string sectionName, string sectionConfiguration)
+        {
+            if (!string.IsNullOrEmpty(sectionConfiguration))
+            {
+                buffer.Append(sectionName)
+                      .Append(' ')
+                      .Append(sectionConfiguration)
+                      .Append(';');
             }
         }
     }

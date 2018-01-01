@@ -5,8 +5,11 @@
 
 namespace Acme.Web.Security.Headers.Configuration
 {
+    using System;
     using System.Configuration;
+    using System.Net.Mime;
     using System.Web;
+    using static ComponentModel.HeaderValueAttribute;
 
     /// <summary>
     /// <see cref="SecuritySection"/> is the web config section.
@@ -46,8 +49,26 @@ namespace Acme.Web.Security.Headers.Configuration
         /// <value>
         /// The frame options.
         /// </value>
-        [ConfigurationProperty("frameOptions", IsRequired = false, DefaultValue = FrameOptions.Deny)]
+        [ConfigurationProperty("frameOptions", IsRequired = false, DefaultValue = FrameOptions.Disabled)]
         public FrameOptions FrameOptions => (FrameOptions)this["frameOptions"];
+
+        /// <summary>
+        /// Gets the referrer policy.
+        /// </summary>
+        /// <value>
+        /// The referrer policy.
+        /// </value>
+        [ConfigurationProperty("referrerPolicy", IsRequired = false, DefaultValue = ReferrerPolicy.Disabled)]
+        public ReferrerPolicy ReferrerPolicy => (ReferrerPolicy)this["referrerPolicy"];
+
+        /// <summary>
+        /// Gets the content security policy.
+        /// </summary>
+        /// <value>
+        /// The content security policy.
+        /// </value>
+        [ConfigurationProperty("strictTransportSecurity", IsRequired = false)]
+        public StrictTransportSecurityConfiguration StrictTransportSecurity => (StrictTransportSecurityConfiguration)this["strictTransportSecurity"];
 
         /// <summary>
         /// Gets the XSS protection.
@@ -68,41 +89,65 @@ namespace Acme.Web.Security.Headers.Configuration
         private string Xmlns => this["xmlns"]?.ToString() ?? string.Empty;
 
         /// <summary>
-        /// Writes the headers to the specified <paramref name="response" />.
+        /// Writes the headers to the specified <paramref name="context" />.Response.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="reportUri">The report URI.</param>
+        public void WriteHeaders(HttpContextBase context, string reportUri)
+        {
+            var response = context.Response;
+            if (response.HeadersWritten)
+            {
+                return;
+            }
+
+            this.WriteHsts(context);
+            if (!MediaTypeNames.Text.Html.Equals(response.ContentType, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            AppendHeader(response, HeaderNames.ContentSecurityPolicy, this.ContentSecurityPolicy.GetHeaderValue(reportUri));
+            AppendHeader(response, HeaderNames.XssProtection, GetHeaderValue(this.XssProtection));
+            AppendHeader(response, HeaderNames.ReferrerPolicy, GetHeaderValue(this.ReferrerPolicy));
+            AppendHeader(response, HeaderNames.FrameOptions, GetHeaderValue(this.FrameOptions));
+            if (this.ContentTypeOptions)
+            {
+                response.AppendHeader(HeaderNames.ContentTypeOptions, "nosniff");
+            }
+        }
+
+        /// <summary>
+        /// Appends the header.
         /// </summary>
         /// <param name="response">The response.</param>
-        /// <param name="reportUri">The report URI.</param>
-        public void WriteHeaders(HttpResponseBase response, string reportUri)
+        /// <param name="headerName">Name of the header.</param>
+        /// <param name="headerValue">The header value.</param>
+        private static void AppendHeader(HttpResponseBase response, string headerName, string headerValue)
         {
-            if (!response.HeadersWritten)
+            if (!string.IsNullOrEmpty(response.Headers[headerName]) || string.IsNullOrWhiteSpace(headerValue))
             {
-                var csp = this.ContentSecurityPolicy.GetHeaderValue(reportUri);
-                if (!string.IsNullOrWhiteSpace(csp))
-                {
-                    response.AppendHeader("Content-Security-Policy", csp);
-                }
-
-                switch (this.XssProtection)
-                {
-                    case XssProtection.Block:
-                        response.AppendHeader("X-XSS-Protection", "1; mode=block");
-                        break;
-
-                    case XssProtection.Enabled:
-                        response.AppendHeader("X-XSS-Protection", "1");
-                        break;
-                }
-
-                if (this.ContentTypeOptions)
-                {
-                    response.AppendHeader("X-Content-Type-Options", "nosniff");
-                }
-
-                if (this.FrameOptions != FrameOptions.Disabled)
-                {
-                    response.AppendHeader("X-Frame-Options", this.FrameOptions.ToString().ToUpperInvariant());
-                }
+                return;
             }
+
+            response.AppendHeader(headerName, headerValue);
+        }
+
+        /// <summary>
+        /// Writes the HSTS.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        private void WriteHsts(HttpContextBase context)
+        {
+            var request = context.Request;
+            if (this.StrictTransportSecurity.MaxAge <= 0 || // Disable if max age is not a positive number.
+                !request.IsSecureConnection || // HSTS should be added only with HTTPS.
+                !request.Url.IsDefaultPort /* Avoid issue with IIS Express custom HTTPS port. */)
+            {
+                return;
+            }
+
+            AppendHeader(context.Response, HeaderNames.StrictTransportSecurity, this.StrictTransportSecurity.HeaderValue);
         }
     }
 }

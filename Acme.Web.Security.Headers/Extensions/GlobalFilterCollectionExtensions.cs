@@ -18,6 +18,7 @@ namespace Acme.Web.Security.Headers.Extensions
         /// Registers the web security filter.
         /// </summary>
         /// <param name="filters">The filters.</param>
+        [Obsolete("Security headers are now written by the ASP.NET module.")]
         public static void RegisterAcmeWebSecurity(this GlobalFilterCollection filters)
         {
             if (filters == null)

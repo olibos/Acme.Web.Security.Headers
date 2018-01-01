@@ -49,7 +49,7 @@ namespace Acme.Web.Security.Headers.Extensions
                 IsCspWebHookEnabled = true;
                 configuration.Routes.MapHttpRoute(
                     name: RouteName,
-                    routeTemplate: WebSecurityAttribute.CspWebHookRoute.TrimStart('/'),
+                    routeTemplate: CspViolationController.CspWebHookRoute.TrimStart('/'),
                     defaults: new { controller = "CspViolation" });
             }
         }

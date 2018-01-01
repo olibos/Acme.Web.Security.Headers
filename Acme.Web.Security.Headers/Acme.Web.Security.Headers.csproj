@@ -6,8 +6,8 @@
     <Company>ACME</Company>
     <PackageId>Acme.Web.Security.Headers</PackageId>
     <Description>Secure your web site/application with a simple package.</Description>
-    <FileVersion>1.0.0.0</FileVersion>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Acme.Web.Security.Headers.xml</DocumentationFile>
     <IncludeSymbols>True</IncludeSymbols>
     <PackageProjectUrl>https://github.com/olibos/Acme.Web.Security.Headers</PackageProjectUrl>
@@ -15,6 +15,7 @@
     <RepositoryUrl>https://github.com/olibos/Acme.Web.Security.Headers</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/olibos/Acme.Web.Security.Headers/blob/master/LICENSE</PackageLicenseUrl>
     <Copyright>© ACME</Copyright>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,10 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="ContentFiles\App_Start\AcmeConfig.cs.pp">
-      <Pack>true</Pack>
-      <PackagePath>content\App_Start\</PackagePath>
-    </Content>
     <Content Include="ContentFiles\Schemas\Acme.Web.Security.Headers.xsd">
       <Pack>true</Pack>
       <PackagePath>content\Schemas\</PackagePath>

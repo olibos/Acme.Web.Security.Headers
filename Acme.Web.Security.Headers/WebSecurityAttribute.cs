@@ -7,26 +7,30 @@ namespace Acme.Web.Security.Headers
 {
     using System;
     using System.Web.Mvc;
-    using Acme.Web.Security.Headers.Api;
-    using Acme.Web.Security.Headers.Extensions;
-    using Configuration;
+    using Api;
 
     /// <summary>
     /// <see cref="WebSecurityAttribute"/> adds security headers to web pages.
     /// </summary>
     /// <seealso cref="ActionFilterAttribute" />
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
+    [Obsolete("Those actions are now made in SetupMvcModule")]
     public sealed class WebSecurityAttribute : ActionFilterAttribute
     {
         /// <summary>
         /// The CSP route template.
         /// </summary>
-        public const string CspWebHookRoute = "/$acme$/csp";
+        public const string CspWebHookRoute = CspViolationController.CspWebHookRoute;
 
         /// <summary>
         /// Occurs when a browser refuses to load or execute a resource based on the current CSP.
         /// </summary>
-        public static event EventHandler<CspViolationEventArgs> CspViolation;
+        [Obsolete("Use SetupMvcModule.CspViolation")]
+        public static event EventHandler<CspViolationEventArgs> CspViolation
+        {
+            add { CspViolationController.CspViolation += value; }
+            remove { CspViolationController.CspViolation -= value; }
+        }
 
         /// <summary>
         /// Called by the ASP.NET MVC framework before the action method executes.
@@ -34,14 +38,7 @@ namespace Acme.Web.Security.Headers
         /// <param name="filterContext">The filter context.</param>
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            SecuritySection.Instance?.WriteHeaders(filterContext.HttpContext.Response, HttpConfigurationExtensions.IsCspWebHookEnabled && CspViolation != null ? CspWebHookRoute : null);
+            /* This class will be removed in next major version. */
         }
-
-        /// <summary>
-        /// Called when a browser refuses to load or execute a resource based on the current CSP.
-        /// </summary>
-        /// <param name="e">The <see cref="CspViolationEventArgs"/> instance containing the event data.</param>
-        internal static void OnCspViolation(CspViolationEventArgs e)
-            => CspViolation?.Invoke(null, e);
     }
 }

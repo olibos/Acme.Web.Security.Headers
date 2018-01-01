@@ -9,13 +9,106 @@
   <xs:element name="acme.web.security.headers" type="acme.web.security.headers" />
 
   <xs:complexType name="acme.web.security.headers">
-    <xs:all minOccurs="0">
-      <xs:element name="contentSecurityPolicy" type="contentSecurityPolicy" />
+    <xs:all>
+      <xs:element name="contentSecurityPolicy" type="contentSecurityPolicy" minOccurs="0" />
+      <xs:element name="strictTransportSecurity" type="strictTransportSecurity" minOccurs="0" />
     </xs:all>
-    <xs:attribute name="contentTypeOptions" type="boolean" default="true" use="optional" />
+    <xs:attribute name="contentTypeOptions" type="boolean" default="true" use="optional">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[The X-Content-Type-Options response HTTP header is a marker used by the server to indicate that the MIME types advertised in the Content-Type headers should not be changed and be followed. This allows to opt-out of MIME type sniffing, or, in other words, it is a way to say that the webmasters knew what they were doing.
+
+This header was introduced by Microsoft in IE 8 as a way for webmasters to block content sniffing that was happening and could transform non-executable MIME types into executable MIME types. Since then, other browsers have introduced it, even if their MIME sniffing algorithms were less aggressive.
+
+Site security testers usually expect this header to be set.]]>
+        </xs:documentation>
+        <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options" />
+      </xs:annotation>
+    </xs:attribute>
     <xs:attribute name="frameOptions" type="frameOptions" default="Deny" use="optional" />
     <xs:attribute name="xssProtection" type="xssProtection" default="Block" use="optional" />
+    <xs:attribute name="referrerPolicy" type="referrerPolicy" default="NoReferrerWhenDowngrade" />
     <xs:anyAttribute namespace="##other" />
+  </xs:complexType>
+  
+  <xs:simpleType name="referrerPolicy">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[The Referrer-Policy HTTP header governs which referrer information, sent in the Referer header, should be included with requests made.]]>
+      </xs:documentation>
+      <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy" />
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Disabled">
+        <xs:annotation>
+          <xs:documentation><![CDATA[No Referrer-Policy HTTP header is emitted.]]></xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="NoReferrer">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The Referer header will be omitted entirely. No referrer information is sent along with requests.]]></xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+        <xs:enumeration value="NoReferrerWhenDowngrade">
+        <xs:annotation>
+          <xs:documentation><![CDATA[This is the user agent's default behavior if no policy is specified. The origin is sent as referrer to a-priori as-much-secure destination (HTTPS->HTTPS), but isn't sent to a less secure destination (HTTPS->HTTP).]]></xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+        <xs:enumeration value="Origin">
+        <xs:annotation>
+          <xs:documentation><![CDATA[Only send the origin of the document as the referrer in all cases.
+The document https://example.com/page.html will send the referrer https://example.com/.]]></xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+        <xs:enumeration value="OriginWhenCrossOrigin">
+        <xs:annotation>
+          <xs:documentation><![CDATA[Send a full URL when performing a same-origin request, but only send the origin of the document for other cases.]]></xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+        <xs:enumeration value="SameOrigin">
+        <xs:annotation>
+          <xs:documentation><![CDATA[A referrer will be sent for same-site origins, but cross-origin requests will contain no referrer information.]]></xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+        <xs:enumeration value="StrictOrigin">
+        <xs:annotation>
+          <xs:documentation><![CDATA[Only send the origin of the document as the referrer to a-priori as-much-secure destination (HTTPS->HTTPS), but don't send it to a less secure destination (HTTPS->HTTP).]]></xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="StrictOriginWhenCrossOrigin">
+        <xs:annotation>
+          <xs:documentation><![CDATA[Send a full URL when performing a same-origin request, only send the origin of the document to a-priori as-much-secure destination (HTTPS->HTTPS), and send no header to a less secure destination (HTTPS->HTTP).]]></xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="UnsafeUrl">
+        <xs:annotation>
+          <xs:documentation><![CDATA[Send a full URL when performing a same-origin or cross-origin request.
+Warning: This policy will leak origins and paths from TLS-protected resources to insecure origins. Carefully consider the impact of this setting.]]></xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="strictTransportSecurity">
+    <xs:annotation>
+      <xs:documentation><![CDATA[The HTTP Strict-Transport-Security response header (often abbreviated as HSTS)  lets a web site tell browsers that it should only be accessed using HTTPS, instead of using HTTP.]]></xs:documentation>
+      <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security" />
+    </xs:annotation>
+    <xs:attribute name="maxAge" type="xs:positiveInteger" use="required">
+      <xs:annotation>
+        <xs:documentation>The time, in seconds, that the browser should remember that a site is only to be accessed using HTTPS.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="includeSubDomains" type="boolean" use="optional"  default="false">
+      <xs:annotation>
+        <xs:documentation>If this optional parameter is specified, this rule applies to all of the site's subdomains as well.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="preload" type="boolean" use="optional" default="false">
+      <xs:annotation>
+        <xs:documentation>Google maintains an HSTS preload service. By following the guidelines and successfully submitting your domain, browsers will never connect to your domain using an insecure connection. While the service is hosted by Google, all browsers have stated an intent to use (or actually started using) the preload list.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
 
   <xs:simpleType name="boolean">
@@ -26,6 +119,12 @@
   </xs:simpleType>
 
   <xs:simpleType name="xssProtection">
+    <xs:annotation>
+      <xs:documentation>
+        The HTTP X-XSS-Protection response header is a feature of Internet Explorer, Chrome and Safari that stops pages from loading when they detect reflected cross-site scripting (XSS) attacks. Although these protections are largely unnecessary in modern browsers when sites implement a strong Content-Security-Policy that disables the use of inline JavaScript ('unsafe-inline'), they can still provide protections for users of older web browsers that don't yet support CSP.
+      </xs:documentation>
+      <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection" />
+    </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:enumeration value="Disabled">
         <xs:annotation>
@@ -46,6 +145,14 @@
   </xs:simpleType>
   
   <xs:simpleType name="frameOptions">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[The X-Frame-Options HTTP response header can be used to indicate whether or not a browser should be allowed to render a page in a <frame>, <iframe> or <object> . Sites can use this to avoid clickjacking attacks, by ensuring that their content is not embedded into other sites.
+
+The added security is only provided if the user accessing the document is using a browser supporting X-Frame-Options.]]>
+      </xs:documentation>
+      <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options" />
+    </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:enumeration value="Deny">
         <xs:annotation>
@@ -72,20 +179,145 @@
   </xs:simpleType>
 
   <xs:complexType name="contentSecurityPolicy">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks, including Cross Site Scripting (XSS) and data injection attacks. These attacks are used for everything from data theft to site defacement or distribution of malware.]]>
+      </xs:documentation>
+      <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP" />
+    </xs:annotation>
     <xs:all>
-      <xs:element minOccurs="0" name="child" type="contentSecurityPolicyConfiguration" />
-      <xs:element minOccurs="0" name="connect" type="contentSecurityPolicyConfiguration" />
-      <xs:element minOccurs="0" name="default" type="contentSecurityPolicyConfiguration" />
-      <xs:element minOccurs="0" name="font" type="contentSecurityPolicyConfiguration" />
-      <xs:element minOccurs="0" name="form" type="contentSecurityPolicyConfiguration" />
-      <xs:element minOccurs="0" name="img" type="contentSecurityPolicyConfiguration" />
-      <xs:element minOccurs="0" name="media" type="contentSecurityPolicyConfiguration" />
-      <xs:element minOccurs="0" name="object" type="contentSecurityPolicyConfiguration" />
-      <xs:element minOccurs="0" name="script" type="contentSecurityPolicyConfiguration" />
-      <xs:element minOccurs="0" name="style" type="contentSecurityPolicyConfiguration" />
+      <xs:element minOccurs="0" name="child" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The deprecated HTTP Content-Security-Policy (CSP) child-src directive defines the valid sources for web workers and nested browsing contexts loaded using elements such as <frame> and <iframe>. For workers, non-compliant requests are treated as fatal network errors by the user agent.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/child-src" />
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="connect" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The HTTP Content-Security-Policy (CSP) connect-src directive restricts the URLs which can be loaded using script interfaces.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/connect-src" />
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="default" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The HTTP Content-Security-Policy (CSP) default-src directive serves as a fallback for the other CSP fetch directives.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/default-src" />
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="font" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The HTTP Content-Security-Policy (CSP) font-src directive specifies valid sources for fonts loaded using @font-face.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src" />
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="form" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The HTTP Content-Security-Policy (CSP) form-action directive restricts the URLs which can be used as the target of a form submissions from a given context.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/form-src" />
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="frame" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The HTTP Content-Security-Policy (CSP) frame-src directive specifies valid sources for nested browsing contexts loading using elements such as <frame> and <iframe>.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-src" />
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="frameAncestors" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[The HTTP Content-Security-Policy (CSP) frame-ancestors directive specifies valid parents that may embed a page using <frame>, <iframe>, <object>, <embed>, or <applet>.
+
+Setting this directive to 'none' is similar to X-Frame-Options: DENY (which is also supported in older browers).]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors" />
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="img" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The HTTP Content-Security-Policy: img-src directive specifies valid sources of images and favicons.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src" />
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="manifest" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The HTTP Content-Security-Policy: manifest-src directive specifies which manifest can be applied to the resource.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/manifest-src" />
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="media" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The HTTP Content-Security-Policy (CSP) media-src directive specifies valid sources for loading media using the <audio> and <video> elements.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/manifest-src" />
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="object" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[The HTTP Content-Security-Policy object-src directive specifies valid sources for the <object>, <embed>, and <applet> elements.
+
+To set allowed types for <object>, <embed>, and <applet> elements, use the plugin-types directive.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/object-src" />
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="script" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The HTTP Content-Security-Policy (CSP) script-src directive specifies valid sources for sources for JavaScript. This includes not only URLs loaded directly into <script> elements, but also things like inline script event handlers (onclick) and XSLT stylesheets which can trigger script execution.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src" />
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="style" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The HTTP Content-Security-Policy (CSP) style-src directive specifies valid sources for sources for stylesheets.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src" />
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="worker" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The HTTP Content-Security-Policy (CSP) worker-src directive specifies valid sources for Worker, SharedWorker, or ServiceWorker scripts.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/worker-src" />
+        </xs:annotation>
+      </xs:element>
     </xs:all>
+    <xs:attribute name="requireSubresourceIntegrity" type="requireSubresourceIntegrity" />
   </xs:complexType>
 
+  <xs:simpleType name="requireSubresourceIntegrity">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[The HTTP Content-Security-Policy require-sri-for directive instructs the client to require the use of Subresource Integrity for scripts or styles on the page.]]>  
+      </xs:documentation>
+      <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/require-sri-for" />
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[No SRI are required.]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Script">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[Requires SRI for scripts.]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Style">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[Requires SRI for style sheets.]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ScriptAndStyle">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[Requires SRI for both, scripts and style sheets.]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:complexType name="contentSecurityPolicyConfiguration">
     <xs:choice maxOccurs="unbounded" minOccurs="0">
       <xs:element name="add">

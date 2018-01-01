@@ -5,10 +5,13 @@
 
 namespace Acme.Web.Security.Headers
 {
+    using System;
     using System.Web;
     using System.Web.Http;
-    using System.Web.Mvc;
-    using Acme.Web.Security.Headers.Extensions;
+    using Acme.Web.Security.Headers.Api;
+    using Configuration;
+    using Extensions;
+    using HttpConfigurationExtensions = Extensions.HttpConfigurationExtensions;
 
     /// <summary>
     /// Setup Acme.Web.Security.Headers for an MVC web site.
@@ -24,7 +27,16 @@ namespace Acme.Web.Security.Headers
         {
             base.Init(context);
             GlobalConfiguration.Configure(config => config.RegisterCspWebHook());
-            GlobalFilters.Filters.RegisterAcmeWebSecurity();
+        }
+
+        /// <summary>
+        /// Occurs just before ASP.NET sends HTTP headers to the client.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        protected override void PreSendRequestHeaders(HttpContextBase context)
+        {
+            base.PreSendRequestHeaders(context);
+            SecuritySection.Instance?.WriteHeaders(context, HttpConfigurationExtensions.IsCspWebHookEnabled && CspViolationController.HasCspViolationEventHandler ? CspViolationController.CspWebHookRoute : null);
         }
     }
 }
