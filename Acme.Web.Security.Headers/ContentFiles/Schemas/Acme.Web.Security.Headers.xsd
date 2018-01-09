@@ -213,7 +213,7 @@ The added security is only provided if the user accessing the document is using 
       <xs:element minOccurs="0" name="form" type="contentSecurityPolicyConfiguration">
         <xs:annotation>
           <xs:documentation><![CDATA[The HTTP Content-Security-Policy (CSP) form-action directive restricts the URLs which can be used as the target of a form submissions from a given context.]]></xs:documentation>
-          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/form-src" />
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/form-action" />
         </xs:annotation>
       </xs:element>
       <xs:element minOccurs="0" name="frame" type="contentSecurityPolicyConfiguration">
@@ -246,7 +246,7 @@ Setting this directive to 'none' is similar to X-Frame-Options: DENY (which is a
       <xs:element minOccurs="0" name="media" type="contentSecurityPolicyConfiguration">
         <xs:annotation>
           <xs:documentation><![CDATA[The HTTP Content-Security-Policy (CSP) media-src directive specifies valid sources for loading media using the <audio> and <video> elements.]]></xs:documentation>
-          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/manifest-src" />
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/media-src" />
         </xs:annotation>
       </xs:element>
       <xs:element minOccurs="0" name="object" type="contentSecurityPolicyConfiguration">

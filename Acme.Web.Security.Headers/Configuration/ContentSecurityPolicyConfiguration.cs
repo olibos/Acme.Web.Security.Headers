@@ -182,7 +182,7 @@ namespace Acme.Web.Security.Headers.Configuration
             TryAddSection(buffer, "child-src", this.Child);
             TryAddSection(buffer, "connect-src", this.Connect);
             TryAddSection(buffer, "font-src", this.Font);
-            TryAddSection(buffer, "form-src", this.Form);
+            TryAddSection(buffer, "form-action", this.Form);
             TryAddSection(buffer, "frame-src", this.Frame);
             TryAddSection(buffer, "frame-ancestors", this.FrameAncestors);
             TryAddSection(buffer, "img-src", this.Img);

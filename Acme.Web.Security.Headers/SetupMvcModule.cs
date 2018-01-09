@@ -5,7 +5,6 @@
 
 namespace Acme.Web.Security.Headers
 {
-    using System;
     using System.Web;
     using System.Web.Http;
     using Acme.Web.Security.Headers.Api;
