@@ -16,8 +16,15 @@ After installation your web.config has a new configuration section with those de
 ```xml
 <configuration>
   <acme.web.security.headers xmlns="Acme.Web.Security.Headers" referrerPolicy="StrictOriginWhenCrossOrigin" frameOptions="Deny">
-    <contentSecurityPolicy>
-      <default self="true"/>
+    <contentSecurityPolicy insecureRequests="UpgradeInsecureRequests">
+      <default none="true" />
+      <script self="true" />
+      <connect self="true" />
+      <img self="true" />
+      <style self="true" />
+      <base self="true" />
+      <form self="true" />
+      <frameAncestors none="true" />
     </contentSecurityPolicy>
     <strictTransportSecurity maxAge="31536000" includeSubDomains="true" preload="true"/>
   </acme.web.security.headers>
@@ -114,7 +121,7 @@ If you use this package with Umbraco you may add this section to your web.config
       <contentSecurityPolicy>
         <script self="true" unsafeInline="true" unsafeEval="true" />
         <style self="true" unsafeInline="true" />
-        <img self="true">
+        <img self="true" data="true">
           <add host="umbraco.tv" />
           <add host="dashboard.umbraco.org" />
         </img>
@@ -128,6 +135,19 @@ If you use this package with Umbraco you may add this section to your web.config
   </location> 
 </configuration>
 ```
+
+Changes
+-------
+1.0.2:
+* Adds base-uri directive
+* Adds block-all-mixed-content directive
+* Adds upgrade-insecure-requests directive
+* Adapt the default configuration based on [content-security-policy.com](https://content-security-policy.com/) 
+* Adds recomandations from [OBSERVATORY by mozilla](https://observatory.mozilla.org/)
+  * Deny by default, using default-src 'none'
+  * Clickjacking protection, using frame-ancestors
+  * Restricts use of the <base> tag by using base-uri 'none', base-uri 'self', or specific origins
+  * Restricts where <form> contents may be submitted by using form-action 'none', form-action 'self', or specific URIs
 
 Roadmap & Ideas
 ---------------
@@ -150,6 +170,12 @@ To avoid reinventing the wheel and making mistakes, all header documentation is 
 >"[X-Frame-Options](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options)" by [jpmedley](https://developer.mozilla.org/en-US/profiles/jpmedley), [Jas0n99](https://developer.mozilla.org/en-US/profiles/Jas0n99), [shellac_](https://developer.mozilla.org/en-US/profiles/shellac_), [comfytoday](https://developer.mozilla.org/en-US/profiles/comfytoday), [fscholz](https://developer.mozilla.org/en-US/profiles/fscholz), [SphinxKnight](https://developer.mozilla.org/en-US/profiles/SphinxKnight), [Benedito1](https://developer.mozilla.org/en-US/profiles/Benedito1), [kishore333](https://developer.mozilla.org/en-US/profiles/kishore333), [teoli](https://developer.mozilla.org/en-US/profiles/teoli), [JesseNaranjo](https://developer.mozilla.org/en-US/profiles/JesseNaranjo), [Sebastianz](https://developer.mozilla.org/en-US/profiles/Sebastianz), [freddyb](https://developer.mozilla.org/en-US/profiles/freddyb), [Sheppy](https://developer.mozilla.org/en-US/profiles/Sheppy), [foxbrush](https://developer.mozilla.org/en-US/profiles/foxbrush), [Hsvnsson](https://developer.mozilla.org/en-US/profiles/Hsvnsson), [Starefossen](https://developer.mozilla.org/en-US/profiles/Starefossen), [Ellani cola](https://developer.mozilla.org/en-US/profiles/Ellanicola), [Daniel Veditz](https://developer.mozilla.org/en-US/profiles/Daniel%20Veditz), [anthonyryan1](https://developer.mozilla.org/en-US/profiles/anthonyryan1), [estelle](https://developer.mozilla.org/en-US/profiles/estelle), [caioproiete](https://developer.mozilla.org/en-US/profiles/caioproiete), [kscarfone](https://developer.mozilla.org/en-US/profiles/kscarfone), [rothshahar](https://developer.mozilla.org/en-US/profiles/rothshahar), [gasubic](https://developer.mozilla.org/en-US/profiles/gasubic), [maybe](https://developer.mozilla.org/en-US/profiles/maybe), [rockad](https://developer.mozilla.org/en-US/profiles/rockad), [mnoorenberghe](https://developer.mozilla.org/en-US/profiles/mnoorenberghe), [localhorst](https://developer.mozilla.org/en-US/profiles/localhorst), [yyss](https://developer.mozilla.org/en-US/profiles/yyss), [Psz](https://developer.mozilla.org/en-US/profiles/Psz) is licensed under [CC-BY-SA 2.5](http://creativecommons.org/licenses/by-sa/2.5/).
 
 >"[Content Security Policy (CSP)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)" by [vipsh18](https://developer.mozilla.org/en-US/profiles/vipsh18), [PeterDavidCarter](https://developer.mozilla.org/en-US/profiles/PeterDavidCarter), [fscholz](https://developer.mozilla.org/en-US/profiles/fscholz), [David-5-1](https://developer.mozilla.org/en-US/profiles/David-5-1), [allstars.chh](https://developer.mozilla.org/en-US/profiles/allstars.chh), [jpmedley](https://developer.mozilla.org/en-US/profiles/jpmedley), [coolaj86](https://developer.mozilla.org/en-US/profiles/coolaj86), [hooch](https://developer.mozilla.org/en-US/profiles/hooch), [partizanos](https://developer.mozilla.org/en-US/profiles/partizanos), [teoli](https://developer.mozilla.org/en-US/profiles/teoli), [chrisdavidmills](https://developer.mozilla.org/en-US/profiles/chrisdavidmills), [blackoutjack](https://developer.mozilla.org/en-US/profiles/blackoutjack), [Sheppy](https://developer.mozilla.org/en-US/profiles/Sheppy), [davidbgk](https://developer.mozilla.org/en-US/profiles/davidbgk), [imelven](https://developer.mozilla.org/en-US/profiles/imelven), [dregad](https://developer.mozilla.org/en-US/profiles/dregad), [abarth](https://developer.mozilla.org/en-US/profiles/abarth), [devdatta](https://developer.mozilla.org/en-US/profiles/devdatta), [mathjazz](https://developer.mozilla.org/en-US/profiles/mathjazz), [Marsf](https://developer.mozilla.org/en-US/profiles/Marsf), [mnoorenberghe](https://developer.mozilla.org/en-US/profiles/mnoorenberghe), [jswisher](https://developer.mozilla.org/en-US/profiles/jswisher), [bsterne](https://developer.mozilla.org/en-US/profiles/bsterne), [fryn](https://developer.mozilla.org/en-US/profiles/fryn) is licensed under [CC-BY-SA 2.5](http://creativecommons.org/licenses/by-sa/2.5/).
+>
+>"[CSP: block-all-mixed-content](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/block-all-mixed-content)" by [fscholz](https://developer.mozilla.org/en-US/profiles/fscholz), [teoli](https://developer.mozilla.org/en-US/profiles/teoli) is licensed under [CC-BY-SA 2.5](http://creativecommons.org/licenses/by-sa/2.5/).
+>
+>"[CSP: upgrade-insecure-requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/upgrade-insecure-requests)" by [fscholz](https://developer.mozilla.org/en-US/profiles/fscholz), [teoli](https://developer.mozilla.org/en-US/profiles/teoli) is licensed under [CC-BY-SA 2.5](http://creativecommons.org/licenses/by-sa/2.5/).
+>
+>"[CSP: base-uri](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/base-uri)" by [nhoizey](https://developer.mozilla.org/en-US/profiles/nhoizey), [fscholz](https://developer.mozilla.org/en-US/profiles/fscholz) is licensed under [CC-BY-SA 2.5](http://creativecommons.org/licenses/by-sa/2.5/).
 >
 >"[CSP: child-src](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/child-src)" by [sideshowbarker](https://developer.mozilla.org/en-US/profiles/sideshowbarker), [fscholz](https://developer.mozilla.org/en-US/profiles/fscholz), [teoli](https://developer.mozilla.org/en-US/profiles/teoli) is licensed under [CC-BY-SA 2.5](http://creativecommons.org/licenses/by-sa/2.5/).
 >

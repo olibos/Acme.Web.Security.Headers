@@ -19,6 +19,16 @@ namespace Acme.Web.Security.Headers.Configuration
     public class ContentSecurityPolicyConfiguration : ConfigurationElement
     {
         /// <summary>
+        /// Gets the base.
+        /// base-uri directive restricts the URLs which can be used in a document's &lt;base&gt; element. If this value is absent, then any URI is allowed. If this directive is absent, the user agent will use the value in the &lt;base&gt; element.
+        /// </summary>
+        /// <value>
+        /// The base.
+        /// </value>
+        [ConfigurationProperty("base", IsRequired = false)]
+        public CspDirectiveConfiguration Base => (CspDirectiveConfiguration)this["base"];
+
+        /// <summary>
         /// Gets the child.
         /// Defines valid sources for web workers and nested browsing contexts loaded using elements such as &lt;frame&gt; and &lt;iframe&gt;
         /// </summary>
@@ -104,6 +114,15 @@ namespace Acme.Web.Security.Headers.Configuration
         public CspDirectiveConfiguration Img => (CspDirectiveConfiguration)this["img"];
 
         /// <summary>
+        /// Gets a directive specifying how user agents handle insecure URLs (those served over HTTP).
+        /// </summary>
+        /// <value>
+        /// A directive specifying how user agents handle insecure URLs (those served over HTTP).
+        /// </value>
+        [ConfigurationProperty("insecureRequests", IsRequired = false, DefaultValue = InsecureRequests.BrowserDefault)]
+        public InsecureRequests InsecureRequests => (InsecureRequests)this["insecureRequests"];
+
+        /// <summary>
         /// Gets the manifest, it specifies valid sources of application manifest files.
         /// </summary>
         /// <value>
@@ -179,6 +198,7 @@ namespace Acme.Web.Security.Headers.Configuration
         {
             var buffer = new StringBuilder();
             TryAddSection(buffer, "default-src", this.Default);
+            TryAddSection(buffer, "base-uri", this.Base);
             TryAddSection(buffer, "child-src", this.Child);
             TryAddSection(buffer, "connect-src", this.Connect);
             TryAddSection(buffer, "font-src", this.Font);
@@ -193,6 +213,8 @@ namespace Acme.Web.Security.Headers.Configuration
             TryAddSection(buffer, "script-src", this.Script);
             TryAddSection(buffer, "style-src", this.Style);
             TryAddSection(buffer, "worker-src", this.Worker);
+            TryAddSection(buffer, HeaderValueAttribute.GetHeaderValue(this.InsecureRequests));
+
             if (buffer.Length > 0)
             {
                 TryAddSection(buffer, "report-uri", reportUri);
@@ -237,6 +259,19 @@ namespace Acme.Web.Security.Headers.Configuration
                       .Append(' ')
                       .Append(sectionConfiguration)
                       .Append(';');
+            }
+        }
+
+        /// <summary>
+        /// Tries to add the specified section.
+        /// </summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="sectionName">Name of the section.</param>
+        private static void TryAddSection(StringBuilder buffer, string sectionName)
+        {
+            if (!string.IsNullOrEmpty(sectionName))
+            {
+                buffer.Append(sectionName).Append(';');
             }
         }
     }

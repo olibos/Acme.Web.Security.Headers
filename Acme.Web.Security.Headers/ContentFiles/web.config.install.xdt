@@ -6,8 +6,15 @@
   </configSections>
   <configSections xdt:Transform="RemoveAll" xdt:Locator="Condition(count(*)=0)" />
   <acme.web.security.headers xdt:Transform="InsertIfMissing" xmlns="Acme.Web.Security.Headers" referrerPolicy="StrictOriginWhenCrossOrigin" frameOptions="Deny">
-    <contentSecurityPolicy>
-      <default self="true"/>
+    <contentSecurityPolicy insecureRequests="UpgradeInsecureRequests">
+      <default none="true" />
+      <script self="true" />
+      <connect self="true" />
+      <img self="true" />
+      <style self="true" />
+      <base self="true" />
+      <form self="true" />
+      <frameAncestors none="true" />
     </contentSecurityPolicy>
     <strictTransportSecurity maxAge="31536000" includeSubDomains="true" preload="true"/>
   </acme.web.security.headers>

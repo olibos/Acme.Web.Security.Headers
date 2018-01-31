@@ -186,6 +186,12 @@ The added security is only provided if the user accessing the document is using 
       <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP" />
     </xs:annotation>
     <xs:all>
+      <xs:element minOccurs="0" name="base" type="contentSecurityPolicyConfiguration">
+        <xs:annotation>
+          <xs:documentation><![CDATA[The HTTP Content-Security-Policy base-uri directive restricts the URLs which can be used in a document's <base> element. If this value is absent, then any URI is allowed. If this directive is absent, the user agent will use the value in the <base> element.]]></xs:documentation>
+          <xs:appinfo source="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/base-uri" />
+        </xs:annotation>
+      </xs:element>
       <xs:element minOccurs="0" name="child" type="contentSecurityPolicyConfiguration">
         <xs:annotation>
           <xs:documentation><![CDATA[The deprecated HTTP Content-Security-Policy (CSP) child-src directive defines the valid sources for web workers and nested browsing contexts loaded using elements such as <frame> and <iframe>. For workers, non-compliant requests are treated as fatal network errors by the user agent.]]></xs:documentation>
@@ -278,8 +284,41 @@ To set allowed types for <object>, <embed>, and <applet> elements, use the plugi
       </xs:element>
     </xs:all>
     <xs:attribute name="requireSubresourceIntegrity" type="requireSubresourceIntegrity" />
+    <xs:attribute name="insecureRequests" type="insecureRequests" />
   </xs:complexType>
 
+  <xs:simpleType name="insecureRequests">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[Determines how user agents handle insecure URLs (those served over HTTP).]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="BrowserDefault">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[Let the user agents choice what to do with insecure URLs (those served over HTTP).]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="UpgradeInsecureRequests">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[The upgrade-insecure-requests directive instructs user agents to treat all of a site's insecure URLs (those served over HTTP) as though they have been replaced with secure URLs (those served over HTTPS). This directive is intended for web sites with large numbers of insecure legacy URLs that need to be rewritten.
+The upgrade-insecure-requests directive will not ensure that users visiting your site via links on third-party sites will be upgraded to HTTPS for the top-level navigation and thus does not replace the Strict-Transport-Security (HSTS) header, which should still be set with an appropriate max-age to ensure that users are not subject to SSL stripping attacks.]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BlockAllMixedContent">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[The upgrade-insecure-requests directive instructs user agents to treat all of a site's insecure URLs (those served over HTTP) as though they have been replaced with secure URLs (those served over HTTPS). This directive is intended for web sites with large numbers of insecure legacy URLs that need to be rewritten.
+All mixed content resource requests are blocked, including both active and passive mixed content. This also applies to <iframe> documents, ensuring the entire page is mixed content free.]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="requireSubresourceIntegrity">
     <xs:annotation>
       <xs:documentation>
