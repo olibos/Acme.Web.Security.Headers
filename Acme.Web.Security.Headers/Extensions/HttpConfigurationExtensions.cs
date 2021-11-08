@@ -8,6 +8,9 @@ namespace Acme.Web.Security.Headers.Extensions
     using System;
     using System.Linq;
     using System.Web.Http;
+
+    using Acme.Web.Security.Headers.Configuration;
+
     using Api;
 
     /// <summary>
@@ -39,7 +42,7 @@ namespace Acme.Web.Security.Headers.Extensions
                 throw new ArgumentNullException(nameof(configuration));
             }
 
-            if (!configuration.Formatters.Any(f => f.SupportedMediaTypes.Any(m => m.MediaType == CspReportMediaTypeFormatter.MediaType)))
+            if (SecuritySection.Instance.RegisterReportMediaType && !configuration.Formatters.Any(f => f.SupportedMediaTypes.Any(m => m.MediaType == CspReportMediaTypeFormatter.MediaType)))
             {
                 configuration.Formatters.Add(new CspReportMediaTypeFormatter());
             }

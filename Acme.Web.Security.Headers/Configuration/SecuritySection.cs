@@ -62,6 +62,15 @@ namespace Acme.Web.Security.Headers.Configuration
         public ReferrerPolicy ReferrerPolicy => (ReferrerPolicy)this["referrerPolicy"];
 
         /// <summary>
+        /// Gets a value indicating whether the report media type must be registered.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the report media type must be registered; otherwise, <c>false</c>.
+        /// </value>
+        [ConfigurationProperty("registerReportMediaType", IsRequired = false, DefaultValue = true)]
+        public bool RegisterReportMediaType => (bool)this["registerReportMediaType"];
+
+        /// <summary>
         /// Gets the content security policy.
         /// </summary>
         /// <value>
