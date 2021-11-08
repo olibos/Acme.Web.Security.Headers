@@ -82,6 +82,17 @@ To avoid "/trace.axd" returning a *500* if not enabled and telling the world you
 ```
 > Inspired by "[Securing the ASP.NET MVC Web.config](https://rehansaeed.com/securing-the-aspnet-mvc-web-config/)" by [Muhammad Rehan Saeed](https://rehansaeed.com/)
 
+---
+
+The package adds by default the support of a csp-report mime type
+To remove it, set registerReportMediaType to false
+```xml
+<configuration>
+  <acme.web.security.headers xmlns="Acme.Web.Security.Headers" registerReportMediaType="false">
+  </acme.web.security.headers>
+</configuration>
+```
+
 Cookies
 -------
 It adds SameSite support (in LAX by default)
@@ -138,6 +149,9 @@ If you use this package with Umbraco you may add this section to your web.config
 
 Changes
 -------
+1.1.0:
+* Adds the possibility to deactivate the csp report mime type formatter
+
 1.0.2:
 * Adds base-uri directive
 * Adds block-all-mixed-content directive

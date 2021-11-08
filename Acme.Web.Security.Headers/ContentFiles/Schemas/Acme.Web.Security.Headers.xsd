@@ -26,8 +26,9 @@ Site security testers usually expect this header to be set.]]>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="frameOptions" type="frameOptions" default="Deny" use="optional" />
-    <xs:attribute name="xssProtection" type="xssProtection" default="Block" use="optional" />
     <xs:attribute name="referrerPolicy" type="referrerPolicy" default="NoReferrerWhenDowngrade" />
+    <xs:attribute name="registerReportMediaType" type="boolean" default="true" use="optional" />
+    <xs:attribute name="xssProtection" type="xssProtection" default="Block" use="optional" />
     <xs:anyAttribute namespace="##other" />
   </xs:complexType>
   

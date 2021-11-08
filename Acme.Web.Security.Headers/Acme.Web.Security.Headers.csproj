@@ -15,7 +15,7 @@
     <RepositoryUrl>https://github.com/olibos/Acme.Web.Security.Headers</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/olibos/Acme.Web.Security.Headers/blob/master/LICENSE</PackageLicenseUrl>
     <Copyright>© ACME</Copyright>
-    <Version>1.0.2</Version>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
