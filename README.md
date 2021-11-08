@@ -152,6 +152,17 @@ Changes
 1.1.0:
 * Adds the possibility to deactivate the csp report mime type formatter
 
+1.0.2:
+* Adds base-uri directive
+* Adds block-all-mixed-content directive
+* Adds upgrade-insecure-requests directive
+* Adapt the default configuration based on [content-security-policy.com](https://content-security-policy.com/) 
+* Adds recomandations from [OBSERVATORY by mozilla](https://observatory.mozilla.org/)
+  * Deny by default, using default-src 'none'
+  * Clickjacking protection, using frame-ancestors
+  * Restricts use of the <base> tag by using base-uri 'none', base-uri 'self', or specific origins
+  * Restricts where <form> contents may be submitted by using form-action 'none', form-action 'self', or specific URIs
+
 Roadmap & Ideas
 ---------------
 * Unit tests
